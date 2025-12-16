@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>Minesweeper</h1>
+      <div class="controls">
+        <div class="status">
+          <span id="mine-count" aria-live="polite"></span>
+          <span id="timer" aria-live="polite"></span>
+          <span id="game-state" aria-live="polite"></span>
+        </div>
+        <div class="actions">
+          <label for="width">Width</label>
+          <input id="width" type="number" min="5" max="35" value="25">
+          <label for="height">Height</label>
+          <input id="height" type="number" min="5" max="25" value="16">
+          <label for="mines">Mines</label>
+          <input id="mines" type="number" min="1" max="400" value="50">
+          <button id="restart" type="button">Restart</button>
+        </div>
+      </div>
+    </header>
+    <section class="board-container" aria-label="Minesweeper Board">
+      <div id="board" class="board" role="grid" aria-live="polite"></div>
+    </section>
+    <section class="instructions">
+      <p>Left click to reveal tiles. Right click or long press to toggle flags. Reveal every non-mine tile to win.</p>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
