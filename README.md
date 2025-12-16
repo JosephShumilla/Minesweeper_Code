@@ -1,3 +1,5 @@
+# Minesweeper
+
 Ported from the original C++/SFML implementation to the HTML/JavaScript version and coded by Joseph Shumilla.
 
 To use this code properly. make sure to set up the SFML library properly in your IDE. Make sure all file locations match the path specific to your computer as well.
