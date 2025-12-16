@@ -32,6 +32,12 @@ h1 {
   color: #b9c8db;
 }
 
+.credit {
+  margin: 0 0 0.75rem;
+  color: #9eb5ce;
+  font-size: 0.95rem;
+}
+
 #board {
   width: 100%;
   border: 4px solid var(--panel);
@@ -40,12 +46,6 @@ h1 {
   display: block;
   image-rendering: pixelated;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-}
-
-.footer {
-  margin-top: 0.75rem;
-  color: #9eb5ce;
-  font-size: 0.9rem;
 }
 
 .modal {
