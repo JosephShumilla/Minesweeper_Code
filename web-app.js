@@ -10,7 +10,6 @@ const ASSETS = [
   "debug",
   "play",
   "pause",
-  "leaderboard",
   "face_happy",
   "face_lose",
   "face_win",
@@ -52,7 +51,6 @@ const buttons = {
   reset: { x: 0, y: 0, w: 64, h: 64, name: "face_happy" },
   debug: { x: 0, y: 0, w: 64, h: 64, name: "debug" },
   pause: { x: 0, y: 0, w: 64, h: 64, name: "pause" },
-  leaderboard: { x: 0, y: 0, w: 64, h: 64, name: "leaderboard" },
 };
 
 function parseConfig(text) {
@@ -187,14 +185,11 @@ function updateButtonPositions() {
   buttons.reset.x = centerX;
   buttons.reset.y = baseY - 16;
 
-  buttons.debug.x = state.width * TILE_SIZE - 304;
+  buttons.debug.x = state.width * TILE_SIZE - 240;
   buttons.debug.y = baseY - 16;
 
-  buttons.pause.x = state.width * TILE_SIZE - 240;
+  buttons.pause.x = state.width * TILE_SIZE - 176;
   buttons.pause.y = baseY - 16;
-
-  buttons.leaderboard.x = state.width * TILE_SIZE - 176;
-  buttons.leaderboard.y = baseY - 16;
 }
 
 function toggleFlag(x, y) {
@@ -246,7 +241,6 @@ function checkWin() {
   if (state.revealedSafe === state.width * state.height - state.mines) {
     state.gameWon = true;
     state.elapsed = elapsedSeconds();
-    saveLeaderboardEntry(state.elapsed);
   }
 }
 
@@ -279,6 +273,11 @@ function drawTile(x, y, cell) {
   const dy = y * TILE_SIZE;
   const hiddenImg = images.tile_hidden;
   const revealedImg = images.tile_revealed;
+
+  if (state.paused) {
+    ctx.drawImage(hiddenImg, dx, dy, TILE_SIZE, TILE_SIZE);
+    return;
+  }
 
   if (!cell.revealed) {
     ctx.drawImage(hiddenImg, dx, dy, TILE_SIZE, TILE_SIZE);
@@ -343,7 +342,6 @@ function drawHeader() {
   ctx.drawImage(images.debug, buttons.debug.x, buttons.debug.y, buttons.debug.w, buttons.debug.h);
   const pauseImg = state.paused ? images.play : images.pause;
   ctx.drawImage(pauseImg, buttons.pause.x, buttons.pause.y, buttons.pause.w, buttons.pause.h);
-  ctx.drawImage(images.leaderboard, buttons.leaderboard.x, buttons.leaderboard.y, buttons.leaderboard.w, buttons.leaderboard.h);
 }
 
 function draw() {
@@ -373,8 +371,6 @@ function handleLeftClick(mx, my) {
         toggleDebug();
       } else if (name === "pause") {
         togglePause();
-      } else if (name === "leaderboard") {
-        showLeaderboard();
       }
       return;
     }
@@ -414,44 +410,6 @@ function gameLoop() {
   }
   draw();
   requestAnimationFrame(gameLoop);
-}
-
-function saveLeaderboardEntry(seconds) {
-  const list = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  list.push({ time: seconds, date: new Date().toISOString() });
-  list.sort((a, b) => a.time - b.time);
-  localStorage.setItem("leaderboard", JSON.stringify(list.slice(0, 5)));
-}
-
-function showLeaderboard() {
-  const list = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  const modal = document.createElement("div");
-  modal.className = "modal";
-  const card = document.createElement("div");
-  card.className = "modal-card";
-  const title = document.createElement("h2");
-  title.textContent = "Local Leaderboard";
-  const desc = document.createElement("p");
-  desc.textContent = "Best completion times (shorter is better).";
-  const ul = document.createElement("ol");
-  if (!list.length) {
-    const empty = document.createElement("p");
-    empty.textContent = "No wins yet. Clear the board to add your time!";
-    card.append(title, desc, empty);
-  } else {
-    list.forEach((entry) => {
-      const li = document.createElement("li");
-      li.textContent = `${entry.time}s • ${new Date(entry.date).toLocaleString()}`;
-      ul.appendChild(li);
-    });
-    card.append(title, desc, ul);
-  }
-  const close = document.createElement("button");
-  close.textContent = "Close";
-  close.onclick = () => modal.remove();
-  card.append(close);
-  modal.append(card);
-  document.body.append(modal);
 }
 
 async function init() {
