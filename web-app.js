@@ -275,7 +275,7 @@ function drawTile(x, y, cell) {
   const revealedImg = images.tile_revealed;
 
   if (state.paused) {
-    ctx.drawImage(hiddenImg, dx, dy, TILE_SIZE, TILE_SIZE);
+    ctx.drawImage(revealedImg, dx, dy, TILE_SIZE, TILE_SIZE);
     return;
   }
 
